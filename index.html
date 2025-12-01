@@ -1,521 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PBQ Runner — Lesson 15 (Risk Management Processes)</title>
-  <style>
-    :root {
-      --bg: #f4f6fa;
-      --card: #ffffff;
-      --ink: #1b1f2f;
-      --ink-dim: #5c6373;
-      --accent: #2463eb;
-      --ok: #2ba84a;
-      --warn: #e0a106;
-      --err: #e63946;
-      --line: #dfe3eb;
-      --muted-bg: #fafbff;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PBQ Runner — Lesson 15 (Risk Management Processes)</title>
 
-    * { box-sizing: border-box; }
+<style>
+/* ----------------------------------------------------
+   CORE STYLE (SAME AS YOUR TEMPLATE)
+---------------------------------------------------- */
+:root {
+  --bg: #f4f6fa;
+  --card: #ffffff;
+  --ink: #1b1f2f;
+  --ink-dim: #5c6373;
+  --accent: #2463eb;
+  --ok: #2ba84a;
+  --err: #e63946;
+  --line: #dfe3eb;
+  --muted-bg: #fafbff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 "Segoe UI", Roboto, system-ui, sans-serif;
+}
+header {
+  padding: 12px;
+  background: #fff;
+  border-bottom: 1px solid #d7dce6;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.pill {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border-radius: 8px;
+  background: #eaf0ff;
+  border: 1px solid #c8d4fa;
+  color: var(--accent);
+  font-weight: 600;
+}
+main {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+.card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  margin: 20px 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+.scenario-label {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #e9f9ef;
+  border: 1px solid #c6ebd3;
+  color: #116a3d;
+  font-size: 0.85rem;
+  font-weight: 800;
+  width: max-content;
+}
+.chip {
+  background:#eef2ff;
+  border:1px solid #ccd7ff;
+  color:#1f44b4;
+  padding:.1rem .45rem;
+  border-radius:999px;
+  font-size:.75rem;
+}
+.finding {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  margin:8px 0;
+  cursor:grab;
+  box-shadow:0 3px 8px rgba(0,0,0,.05);
+}
+.finding.dragging { opacity:0.7; }
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--ink);
-      font: 16px/1.5 "Segoe UI", Roboto, system-ui, sans-serif;
-    }
+/* ----------------------------------------------------
+   PBQ1 HEATMAP (4-QUADRANT)
+---------------------------------------------------- */
+.heatmap {
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 220px);
+  gap:10px;
+}
+.quad {
+  background: var(--muted-bg);
+  border:2px dashed #c9d1e3;
+  border-radius:14px;
+  padding:10px;
+  position:relative;
+}
+.quad h4 {
+  margin:0 0 6px;
+  color:#1f3a86;
+  font-size:1rem;
+}
+.ghost { opacity:0.4; font-style:italic; }
 
-    header {
-      padding: 10px 12px;
-      border-bottom: 1px solid #d7dce6;
-      background: #ffffff;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
+/* ----------------------------------------------------
+   PBQ2 TABLE
+---------------------------------------------------- */
+table { width:100%; border-collapse:separate; border-spacing:0 }
+th, td {
+  padding:10px;
+  border-bottom:1px solid var(--line);
+}
+th { background:#eef1ff; }
 
-    h1 {
-      margin: 0.2rem 0;
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
+/* ----------------------------------------------------
+   BUTTONS
+---------------------------------------------------- */
+.btn {
+  appearance:none;
+  border:1px solid #c2c8d6;
+  background:#f8f9fb;
+  padding:0.4rem 0.7rem;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:0.9rem;
+}
+.btn.primary {
+  background:var(--accent);
+  color:white;
+  border-color:var(--accent);
+}
+.btn:hover { background:#e1e9ff; }
+.btn.primary:hover { background:#174bbd; }
 
-    main {
-      max-width: 900px;
-      margin: 32px auto;
-      padding: 0 16px;
-    }
+.result { margin-top:8px; font-weight:700; }
+.correct { color:var(--ok); }
+.incorrect { color:var(--err); }
 
-    .toolbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 0.4rem 0;
-    }
+.feedback {
+  margin-top:8px;
+  padding:10px;
+  border-radius:8px;
+  background:#fff5f5;
+  border:1px solid #f5cccc;
+  color:#7a1e27;
+}
+</style>
 
-    .toolbar-left,
-    .toolbar-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      appearance: none;
-      border: 1px solid #c2c8d6;
-      background: #f8f9fb;
-      color: var(--ink);
-      padding: 0.4rem 0.7rem;
-      height: 32px;
-      min-width: 104px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      font-size: 0.9rem;
-      line-height: 1.2;
-      text-align: center;
-      transition: all 0.15s ease-in-out;
-      text-decoration: none;
-    }
-    .btn:hover { background: #eaf0ff; border-color: var(--accent); }
-    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .btn.primary:hover { background: #1f56c4; }
-
-    .pill {
-      display: inline-block;
-      padding: 0.35rem 0.7rem;
-      border-radius: 8px;
-      background: #f0f4ff;
-      border: 1px solid #c8d4fa;
-      color: var(--accent);
-      font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-      margin: 20px 0;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-    }
-
-    .title { font-weight: 700; }
-    .muted { color: var(--ink-dim); }
-
-    .scenario-wrap {
-      display: grid;
-      gap: 8px;
-    }
-
-    .scenario-label {
-      display: inline-block;
-      padding: 0.35rem 0.75rem;
-      border-radius: 999px;
-      background: #e9f9ef;
-      border: 1px solid #c6ebd3;
-      color: #116a3d;
-      font-size: 0.85rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      width: max-content;
-    }
-
-    .scenario {
-      white-space: pre-wrap;
-      color: #2b2f3c;
-    }
-
-    .result { margin-top: 10px; font-weight: 600; }
-    .correct { color: var(--ok); }
-    .incorrect { color: var(--err); }
-
-    .feedback {
-      margin-top: 6px;
-      padding: 0.55rem 0.7rem;
-      border: 1px solid #f1c9cf;
-      background: #fff5f6;
-      color: #7a1e27;
-      border-radius: 8px;
-      font-size: 0.95rem;
-    }
-
-    footer {
-      max-width: 900px;
-      margin: 40px auto 80px;
-      padding: 0 16px;
-      color: #707789;
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
-    select {
-      background: #ffffff;
-      color: var(--ink);
-      border: 1px solid #cbd2e0;
-      padding: 0.35rem 0.5rem;
-      border-radius: 8px;
-      margin: 0 0.35rem;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(36, 99, 235, 0.2);
-    }
-
-    /* Kanban */
-    .lanes { display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; }
-    .lane {
-      min-height: 160px; padding: 10px;
-      border:1px dashed #c9d1e3;
-      border-radius: 12px;
-      background: var(--muted-bg);
-      position:relative;
-    }
-    .lane h4 { margin:.2rem 0 .5rem; color:#2b4aa6; }
-    .ghost { position:relative; padding:.3rem .5rem; font-style:italic; color:#5c6373 }
-    .finding {
-      background:#fff; border:1px solid var(--line); border-radius: 12px;
-      padding:.55rem .65rem; margin:.45rem 0;
-      cursor:grab; box-shadow: 0 4px 10px rgba(0,0,0,.04);
-    }
-    .finding.dragging { opacity:.85; }
-
-    .chips { display:flex; gap:6px; flex-wrap:wrap; margin:.15rem 0 .25rem }
-    .chip { background:#eef2ff; border:1px solid #cdd7ff; color:#1f44b4; padding:.1rem .45rem; border-radius:999px; font-size:.75rem }
-
-    /* Table */
-    table { width:100%; border-collapse:separate; border-spacing:0 }
-    th, td { padding:10px; border-bottom:1px solid var(--line); text-align:left }
-    th { background:#f6f8ff; }
-
-    @media (max-width: 640px) {
-      .toolbar { flex-direction: column; align-items: stretch; }
-      .btn { width: auto; min-width: unset; }
-      .lanes { grid-template-columns: 1fr; }
-    }
-  </style>
 </head>
-
 <body>
+
 <header>
   <div class="pill">Lesson 15 • Risk Management Processes</div>
-
-  <div class="toolbar">
-    <div class="toolbar-left">
-      <a class="btn" href="lesson15_practice_questions.html" target="_blank">Practice Questions</a>
-      <a class="btn" href="audio_review.html" target="_blank">Audio Review</a>
-    </div>
-
-    <div class="toolbar-right">
-      <button class="btn" id="btnReset">Reset</button>
-      <button class="btn primary" id="btnCheck">Check Answers</button>
-    </div>
-  </div>
 </header>
 
 <main>
 
-  <!-- Scenario -->
-  <section class="card">
-    <div class="title" id="pbq_title">KonaTech — Quarterly Risk & Controls Review</div>
-    <div class="muted" id="lesson">Lesson 15 – Explain Risk Management Processes</div>
+<!-- ----------------------------------------------------
+     SCENARIO
+---------------------------------------------------- -->
+<section class="card">
+  <div class="scenario-label">Scenario</div>
+  <p>
+You are completing a quarterly Risk Assessment for KonaTech.  
+The goal is to evaluate:
+<br><br>
+• Likelihood  
+• Impact  
+• Inherent vs Residual Risk  
+• Business Impact Analysis (MTD / MEF importance)  
+• Risk Treatment (Mitigate / Transfer / Avoid / Accept)  
+• Monitoring cadence  
+  </p>
+</section>
 
-    <div class="scenario-wrap">
-      <div class="scenario-label">Scenario</div>
+<!-- ----------------------------------------------------
+     PBQ 1: DRAG & DROP 4-QUADRANT HEATMAP
+---------------------------------------------------- -->
+<section class="card" id="pbq1">
+  <div class="scenario-label" style="background:#eaf2ff;color:#1a3db3;">PBQ 1</div>
+  <h2>Place each risk in the correct Heatmap Quadrant</h2>
+  <p class="muted">Quadrants are based on <b>Likelihood</b> vs <b>Impact</b>
+     (Inherent Risk from Lesson 15).</p>
 
-      <p class="scenario" id="scenario">
-KonaTech is conducting its quarterly enterprise risk review as part of its Risk & Control Self-Assessment (RCSA). 
-The risk team has identified new threats, vulnerabilities, and business impacts that affect several mission-essential 
-functions (MEFs). Business Impact Analysis (BIA) metrics such as Maximum Tolerable Downtime (MTD) and system 
-dependencies are being used to evaluate the severity of each risk.
-
-You are given confirmed risks involving:
-• External data exposure caused by misconfiguration (high confidentiality impact). 
-• A mission-essential system vulnerable to a high-likelihood exploit (high integrity + availability impact).
-• Internal workstation vulnerabilities with low inherent impact and limited threat actor capability.
-• Outdated segmented infrastructure with compensating controls.
-• Cryptographic weaknesses on a customer-facing interface.
-
-Leadership priorities (based on risk appetite & tolerance):
-• Protect confidentiality and prevent regulatory breaches.
-• Maintain availability of mission-essential business functions.
-• Apply mitigation where cost-effective; accept only low residual-risk items.
-• Ensure risk treatments are verified (controls evaluated).
-
-Your tasks:
-1) Categorize risks based on inherent risk, likelihood, and impact to MEFs (Fix Now / Fix Next / Schedule).
-2) Choose the appropriate risk treatment (mitigate, transfer, accept, avoid) and verification cadence for each asset.
-      </p>
+  <div class="heatmap">
+    <div class="quad" data-quad="HH">
+      <h4>High Likelihood / High Impact</h4>
     </div>
-  </section>
-
-  <!-- PBQ 1 -->
-  <section class="card" id="pbq1">
-    <div class="scenario-label" style="background:#e9f3ff;border-color:#cfe0ff;color:#1b4cb8">PBQ 1</div>
-    <h2 style="margin:8px 0 2px">Categorize each risk</h2>
-    <p class="muted">
-      Sort each risk into <b>Fix Now</b>, <b>Fix Next</b>, or <b>Schedule</b> based on inherent risk, likelihood, impact, and MEF relevance.
-    </p>
-
-    <div class="lanes">
-      <div class="lane" data-lane="NOW"><h4>Fix Now</h4></div>
-      <div class="lane" data-lane="NEXT"><h4>Fix Next</h4></div>
-      <div class="lane" data-lane="LATER"><h4>Schedule</h4></div>
+    <div class="quad" data-quad="LH">
+      <h4>Low Likelihood / High Impact</h4>
     </div>
-
-    <div id="pool" style="margin-top:10px"></div>
-    <div class="result" id="pbq1_result"></div>
-    <div class="feedback" id="pbq1_fb" hidden></div>
-  </section>
-
-  <!-- PBQ 2 -->
-  <section class="card" id="pbq2">
-    <div class="scenario-label" style="background:#e9f3ff;border-color:#cfe0ff;color:#1b4cb8">PBQ 2</div>
-    <h2 style="margin:8px 0 2px">Select the correct risk treatment & verification cadence</h2>
-    <p class="muted">Choose the appropriate <b>risk response</b> (mitigate, transfer, accept, avoid) and how often the controls should be verified.</p>
-
-    <div style="overflow-x:auto">
-      <table>
-        <thead>
-          <tr>
-            <th>Asset</th><th>Context</th><th>Treatment</th><th>Cadence</th>
-          </tr>
-        </thead>
-        <tbody id="scan_tbody"></tbody>
-      </table>
+    <div class="quad" data-quad="HL">
+      <h4>High Likelihood / Low Impact</h4>
     </div>
+    <div class="quad" data-quad="LL">
+      <h4>Low Likelihood / Low Impact</h4>
+    </div>
+  </div>
 
-    <div class="result" id="pbq2_result"></div>
-    <div class="feedback" id="pbq2_fb" hidden></div>
-  </section>
+  <div id="risk_pool" style="margin-top:18px;"></div>
+  <div class="result" id="pbq1_result"></div>
+  <div class="feedback" id="pbq1_fb" hidden></div>
+</section>
+
+<!-- ----------------------------------------------------
+     PBQ 2: RISK TREATMENT MATRIX
+---------------------------------------------------- -->
+<section class="card" id="pbq2">
+  <div class="scenario-label" style="background:#eaf2ff;color:#1a3db3;">PBQ 2</div>
+  <h2>Select the correct Risk Treatment & Monitoring Cadence</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Risk</th>
+        <th>Context</th>
+        <th>Treatment</th>
+        <th>Cadence</th>
+      </tr>
+    </thead>
+    <tbody id="tbody2"></tbody>
+  </table>
+
+  <div class="result" id="pbq2_result"></div>
+  <div class="feedback" id="pbq2_fb" hidden></div>
+</section>
+
+<!-- ----------------------------------------------------
+     BUTTONS
+---------------------------------------------------- -->
+<div style="text-align:center; margin:30px 0;">
+  <button class="btn" id="btnReset">Reset</button>
+  <button class="btn primary" id="btnCheck">Check Answers</button>
+</div>
 
 </main>
 
-<footer>
-  Risk management cycle: identify → analyze → evaluate → treat (mitigate/transfer/accept/avoid) → monitor & review.
-</footer>
-
+<!-- ----------------------------------------------------
+     SCRIPT
+---------------------------------------------------- -->
 <script>
-/* Helpers */
-const $ = (sel, el=document) => el.querySelector(sel);
-const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+const $ = (s, el=document)=>el.querySelector(s);
+const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
 
-/* ===================== PBQ 1 ===================== */
-const FINDINGS = [
-  { id:'F1',
-    title:'Public cloud storage misconfiguration exposing PII',
-    tags:['Confidentiality','High Impact','Inherent Risk High','KRI'],
-    meta:'High confidentiality impact • Public exposure • Likelihood high',
-    expect:'NOW',
-    why:'Confidentiality breach exceeds risk appetite; requires immediate mitigation.'
+/* ---------------------------------------------
+   PBQ1 — HEATMAP RISKS
+--------------------------------------------- */
+const RISKS = [
+  {
+    id:"R1",
+    title:"Cloud bucket exposing PII",
+    tags:["Confidentiality","Regulatory","MTD Critical"],
+    expect:"HH",
+    why:"Direct PII exposure → high impact; publicly accessible → high likelihood."
   },
-  { id:'F2',
-    title:'Mission-essential DB vulnerable to high-likelihood exploit',
-    tags:['MEF','Integrity','Availability','High Likelihood'],
-    meta:'Supports MEF • Exploit likely • MTD short',
-    expect:'NOW',
-    why:'Threat + vulnerability + MEF = fix immediately.'
+  {
+    id:"R2",
+    title:"MEF database running outdated cryptography",
+    tags:["MEF","Integrity","High Impact"],
+    expect:"LH",
+    why:"High impact to MEF, but exploit likelihood is still low."
   },
-  { id:'F3',
-    title:'Internal workstation with moderate vulnerability (low threat capability)',
-    tags:['Internal','Moderate','Low Impact'],
-    meta:'Inherent impact low • No MEF dependency',
-    expect:'NEXT',
-    why:'Residual risk acceptable short term.'
+  {
+    id:"R3",
+    title:"Workstation missing patches (no sensitive data)",
+    tags:["Low Impact","Internal"],
+    expect:"HL",
+    why:"Impact is low but likelihood is moderate/high."
   },
-  { id:'F4',
-    title:'Customer-facing interface using deprecated cipher (3DES)',
-    tags:['Crypto','Customer-Facing','Medium'],
-    meta:'Medium impact • No active exploitation',
-    expect:'NEXT',
-    why:'Should be mitigated but not immediately.'
-  },
-  { id:'F5',
-    title:'Legacy segmented backup host on EOL OS',
-    tags:['Legacy','Segmented','Compensating Controls'],
-    meta:'Likelihood low due to segmentation • Migration planned',
-    expect:'LATER',
-    why:'Residual risk acceptable until migration.'
+  {
+    id:"R4",
+    title:"Legacy segmented server not internet-facing",
+    tags:["Legacy","Compensating Controls"],
+    expect:"LL",
+    why:"Segmentation lowers likelihood and business impact is low."
   }
 ];
 
-let KANBAN_STATE = { NOW:[], NEXT:[], LATER:[], POOL:[] };
+let heatmapState = {
+  HH:[], LH:[], HL:[], LL:[], POOL:[...RISKS]
+};
 
-function makeFindingCard(f){
-  const el = document.createElement('div');
-  el.className='finding'; el.draggable=true; el.dataset.id=f.id;
-  el.innerHTML = `
-    <div class="chips">${f.tags.map(t=>`<span class="chip">${t}</span>`).join(' ')}</div>
-    <div style="font-weight:700">${f.title}</div>
-    <div class="meta">${f.meta}</div>`;
-  el.addEventListener('dragstart', e=>{ el.classList.add('dragging'); e.dataTransfer.setData('text/plain', f.id); });
-  el.addEventListener('dragend', ()=> el.classList.remove('dragging'));
-  return el;
+/* Render cards */
+function makeCard(r){
+  const d=document.createElement("div");
+  d.className="finding";
+  d.draggable=true;
+  d.dataset.id=r.id;
+  d.innerHTML=`
+    <div>${r.tags.map(t=>`<span class="chip">${t}</span>`).join(" ")}</div>
+    <strong>${r.title}</strong>
+  `;
+  d.addEventListener("dragstart",e=>{
+    d.classList.add("dragging");
+    e.dataTransfer.setData("text/plain", r.id);
+  });
+  d.addEventListener("dragend",()=> d.classList.remove("dragging"));
+  return d;
 }
 
-function renderKanban(){
-  const lanes = { NOW:$('[data-lane="NOW"]'), NEXT:$('[data-lane="NEXT"]'), LATER:$('[data-lane="LATER"]') };
+function renderPBQ1(){
+  /* clear quadrants */
+  $$(".quad").forEach(q=> q.querySelectorAll(".finding, .ghost").forEach(e=>e.remove()));
 
-  Object.values(lanes).forEach(l=> l.querySelectorAll('.finding, .ghost').forEach(el=>el.remove()));
-
-  for(const lane of ['NOW','NEXT','LATER']){
-    KANBAN_STATE[lane].forEach(f => lanes[lane].appendChild(makeFindingCard(f)));
-    if(!KANBAN_STATE[lane].length){
-      const ghost=document.createElement('div'); ghost.className='ghost'; ghost.textContent='Drag here';
-      lanes[lane].appendChild(ghost);
+  /* render per quadrant */
+  for(const q of ["HH","LH","HL","LL"]){
+    const target = document.querySelector(`[data-quad="${q}"]`);
+    heatmapState[q].forEach(r=> target.appendChild(makeCard(r)));
+    if(heatmapState[q].length===0){
+      const ghost=document.createElement("div");
+      ghost.textContent="Drag here";
+      ghost.className="ghost";
+      target.appendChild(ghost);
     }
   }
 
-  const pool=$('#pool'); pool.innerHTML='';
-  KANBAN_STATE.POOL.forEach(f => pool.appendChild(makeFindingCard(f)));
+  /* render pool */
+  const pool=$("#risk_pool");
+  pool.innerHTML="";
+  heatmapState.POOL.forEach(r=> pool.appendChild(makeCard(r)));
 }
 
-function setupDnd(){
-  const zones=[$('[data-lane="NOW"]'), $('[data-lane="NEXT"]'), $('[data-lane="LATER"]'), $('#pool')];
-  zones.forEach(zone=>{
-    zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.style.outline='1px dashed #7aa0ff'; });
-    zone.addEventListener('dragleave', ()=> zone.style.outline='none');
-    zone.addEventListener('drop', e=>{
-      e.preventDefault(); zone.style.outline='none';
-      const id=e.dataTransfer.getData('text/plain');
-      moveTo(zone.id ? 'POOL' : zone.dataset.lane, id);
-      renderKanban();
+function moveRisk(target,id){
+  for(const q of ["HH","LH","HL","LL","POOL"]){
+    const i=heatmapState[q].findIndex(x=>x.id===id);
+    if(i>=0){ heatmapState[q].splice(i,1); break; }
+  }
+  heatmapState[target].push(RISKS.find(r=>r.id===id));
+}
+
+function setupDND(){
+  const zones=[...$$(".quad"), $("#risk_pool")];
+  zones.forEach(z=>{
+    z.addEventListener("dragover", e=>{
+      e.preventDefault();
+      z.style.outline="2px dashed #6c8bff";
+    });
+    z.addEventListener("dragleave",()=> z.style.outline="none");
+    z.addEventListener("drop", e=>{
+      e.preventDefault();
+      z.style.outline="none";
+      const id=e.dataTransfer.getData("text/plain");
+      const quad=z.dataset.quad ?? "POOL";
+      moveRisk(quad,id);
+      renderPBQ1();
     });
   });
 }
 
-function moveTo(target,id){
-  for(const lane of ['NOW','NEXT','LATER','POOL']){
-    const i=KANBAN_STATE[lane].findIndex(x=>x.id===id);
-    if(i>=0){ KANBAN_STATE[lane].splice(i,1); break; }
-  }
-  KANBAN_STATE[target].push(FINDINGS.find(x=>x.id===id));
-}
-
-function initKanban(){
-  KANBAN_STATE={ NOW:[], NEXT:[], LATER:[], POOL:[...FINDINGS].sort(()=>Math.random()-0.5) };
-  renderKanban(); setupDnd();
-}
-
-function gradeKanban(){
-  let correct=0, total=FINDINGS.length; const fb=[];
-  for(const lane of ['NOW','NEXT','LATER']){
-    for(const f of KANBAN_STATE[lane]){
-      if(lane===f.expect) correct++; else fb.push(`• ${f.title}: should be ${f.expect}. ${f.why}`);
+function gradePBQ1(){
+  let correct=0;
+  let fb=[];
+  for(const q of ["HH","LH","HL","LL"]){
+    for(const r of heatmapState[q]){
+      if(r.expect===q) correct++;
+      else fb.push(`• ${r.title}: should be in ${r.expect}. ${r.why}`);
     }
   }
+  $("#pbq1_result").textContent=`${correct}/4 correct`;
+  $("#pbq1_result").className="result " + (correct===4 ? "correct" : "incorrect");
 
-  $('#pbq1_result').textContent=`${correct}/${total} correct`;
-  $('#pbq1_result').className='result ' + (correct===total ? 'correct':'incorrect');
-
-  const el=$('#pbq1_fb');
-  if(fb.length){ el.hidden=false; el.innerHTML=fb.join('<br>'); }
-  else{ el.hidden=true; el.textContent=''; }
+  const box=$("#pbq1_fb");
+  if(fb.length){
+    box.hidden=false;
+    box.innerHTML=fb.join("<br>");
+  } else {
+    box.hidden=true;
+    box.innerHTML="";
+  }
 }
 
-/* ===================== PBQ 2 ===================== */
-const ASSETS = [
-  { name:'KonaTech MEF Database',
-    ctx:'Mission-essential; short MTD; requires strong control validation',
-    expectType:'Mitigate',
-    expectCadence:'Weekly',
-    why:'Requires continuous verification of controls to protect MEF availability/integrity.'
+/* ---------------------------------------------
+   PBQ2 — RISK TREATMENT TABLE
+--------------------------------------------- */
+const PBQ2 = [
+  {
+    risk:"PII Exposure",
+    ctx:"Confidentiality breach; high regulatory impact",
+    expectT:"Mitigate",
+    expectC:"Weekly",
+    why:"Immediate remediation + continuous verification."
   },
-  { name:'Customer-Facing Web Portal',
-    ctx:'High availability; confidentiality moderate; KRI monitored',
-    expectType:'Mitigate',
-    expectCadence:'Weekly',
-    why:'External exposure = higher likelihood; weekly check aligns with risk tolerance.'
+  {
+    risk:"MEF Database Weak Crypto",
+    ctx:"High impact to critical function, but low likelihood",
+    expectT:"Mitigate",
+    expectC:"Bi-weekly",
+    why:"Mitigation required, cadence slightly relaxed."
   },
-  { name:'Partner Interface Gateway',
-    ctx:'Third-party dependency; contractual SLAs; externally exposed',
-    expectType:'Transfer',
-    expectCadence:'Monthly',
-    why:'Risk partially transferred via contract; monthly SLA verification sufficient.'
+  {
+    risk:"Third-Party API Risk",
+    ctx:"Shared responsibility with contractual controls",
+    expectT:"Transfer",
+    expectC:"Monthly",
+    why:"Responsibility transferred via SLA."
   },
-  { name:'Legacy Segmented Backup Host',
-    ctx:'EOL OS; compensating controls; migration planned',
-    expectType:'Accept',
-    expectCadence:'Bi-weekly',
-    why:'Residual risk within tolerance until migration; periodic checks required.'
+  {
+    risk:"Legacy Segmented Host",
+    ctx:"Residual risk within tolerance",
+    expectT:"Accept",
+    expectC:"Monthly",
+    why:"Low impact + compensating controls."
   }
 ];
 
-const TYPES=['Mitigate','Transfer','Accept','Avoid'];
-const CAD=['Daily','Weekly','Bi-weekly','Monthly'];
+const treatments=["Mitigate","Transfer","Accept","Avoid"];
+const cadences=["Daily","Weekly","Bi-weekly","Monthly"];
 
-function renderScanMatrix(){
-  const tb=$('#scan_tbody'); tb.innerHTML='';
-  ASSETS.forEach((a,i)=>{
-    const tr=document.createElement('tr');
+function renderPBQ2(){
+  const tbody=$("#tbody2");
+  tbody.innerHTML="";
+  PBQ2.forEach((r,i)=>{
+    const tr=document.createElement("tr");
     tr.innerHTML=`
-      <td><b>${a.name}</b></td>
-      <td class="muted">${a.ctx}</td>
+      <td><b>${r.risk}</b></td>
+      <td class="muted">${r.ctx}</td>
       <td>
         <select data-i="${i}" data-k="t">
           <option value="" disabled selected>— select —</option>
-          ${TYPES.map(v=>`<option value="${v}">${v}</option>`).join('')}
+          ${treatments.map(t=>`<option>${t}</option>`).join("")}
         </select>
       </td>
       <td>
         <select data-i="${i}" data-k="c">
           <option value="" disabled selected>— select —</option>
-          ${CAD.map(v=>`<option value="${v}">${v}</option>`).join('')}
+          ${cadences.map(c=>`<option>${c}</option>`).join("")}
         </select>
-      </td>`;
-    tb.appendChild(tr);
+      </td>
+    `;
+    tbody.appendChild(tr);
   });
 }
 
-function gradeScanMatrix(){
-  let correct=0, total=ASSETS.length*2; const fb=[];
-  $$('#scan_tbody select').forEach(sel=>{
-    const i=Number(sel.dataset.i), k=sel.dataset.k, row=ASSETS[i], v=sel.value;
+function gradePBQ2(){
+  let correct=0;
+  const total=PBQ2.length*2;
+  let fb=[];
+
+  $$("#tbody2 select").forEach(sel=>{
+    const row=PBQ2[sel.dataset.i];
+    const v=sel.value;
     if(!v) return;
-    if(k==='t'){
-      if(v===row.expectType) correct++; else fb.push(`• ${row.name}: treatment = ${row.expectType}. ${row.why}`);
+
+    if(sel.dataset.k==="t"){
+      if(v===row.expectT) correct++;
+      else fb.push(`• ${row.risk}: Treatment should be ${row.expectT}. ${row.why}`);
     } else {
-      if(v===row.expectCadence) correct++; else fb.push(`• ${row.name}: cadence = ${row.expectCadence}. ${row.why}`);
+      if(v===row.expectC) correct++;
+      else fb.push(`• ${row.risk}: Cadence should be ${row.expectC}. ${row.why}`);
     }
   });
 
-  $('#pbq2_result').textContent=`${correct}/${total} correct`;
-  $('#pbq2_result').className='result ' + (correct===total ? 'correct':'incorrect');
+  $("#pbq2_result").textContent=`${correct}/${total} correct`;
+  $("#pbq2_result").className="result " + (correct===total ? "correct":"incorrect");
 
-  const el=$('#pbq2_fb');
-  if(fb.length){ el.hidden=false; el.innerHTML=fb.join('<br>'); }
-  else{ el.hidden=true; el.textContent=''; }
+  const box=$("#pbq2_fb");
+  if(fb.length){
+    box.hidden=false;
+    box.innerHTML=fb.join("<br>");
+  } else {
+    box.hidden=true;
+    box.textContent="";
+  }
 }
 
-/* ===================== Global ===================== */
+/* ---------------------------------------------
+   Global
+--------------------------------------------- */
+function resetAll(){
+  heatmapState={HH:[],LH:[],HL:[],LL:[],POOL:[...RISKS]};
+  renderPBQ1();
+  renderPBQ2();
+  $("#pbq1_result").textContent="";
+  $("#pbq2_result").textContent="";
+  $("#pbq1_fb").hidden=true;
+  $("#pbq2_fb").hidden=true;
+}
 
 function checkAll(){
-  gradeKanban();
-  gradeScanMatrix();
+  gradePBQ1();
+  gradePBQ2();
 }
 
-function resetAll(){
-  initKanban();
-  renderScanMatrix();
-  ['pbq1_result','pbq2_result'].forEach(id=> $('#'+id).textContent='' );
-  ['pbq1_fb','pbq2_fb'].forEach(id=>{ const n=$('#'+id); n.hidden=true; n.textContent=''; });
-}
-
-window.addEventListener('DOMContentLoaded', ()=>{
-  initKanban();
-  renderScanMatrix();
-  $('#btnCheck').addEventListener('click', checkAll);
-  $('#btnReset').addEventListener('click', resetAll);
+/* init */
+window.addEventListener("DOMContentLoaded",()=>{
+  renderPBQ1();
+  renderPBQ2();
+  setupDND();
+  $("#btnCheck").addEventListener("click", checkAll);
+  $("#btnReset").addEventListener("click", resetAll);
 });
 </script>
 
