@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lesson 15 Audio Review</title>
+<style>
+  :root{
+    --bg:#f6f8fc;
+    --card:#ffffff;
+    --ink:#1b1f2f;
+    --ink-dim:#55607a;
+    --accent:#2463eb;
+    --line:#e2e6ef;
+    --chip:#eef3ff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font:16px/1.55 "Segoe UI", Roboto, system-ui, -apple-system, Arial, sans-serif;
+    color:var(--ink); background:var(--bg);
+  }
+
+  header{
+    background: radial-gradient(1200px 300px at 50% -50%, #eaf1ff 0%, #f6f8fc 60%, #f6f8fc 100%);
+    border-bottom:1px solid var(--line);
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:26px 20px;}
+  .kicker{color:var(--accent); font-weight:700; letter-spacing:.04em; font-size:.85rem}
+  h1{margin:.35rem 0 0; font-size:1.7rem;}
+  .sub{margin:.4rem 0 0; color:var(--ink-dim)}
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin:.8rem 0 0}
+  .chip{background:var(--chip); border:1px solid #d6e2ff; color:#244a99; padding:.25rem .6rem; border-radius:999px; font-size:.85rem}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:18px; margin:22px 0; box-shadow:0 4px 18px rgba(0,0,0,.04);
+  }
+  h2{font-size:1.15rem; margin:.1rem 0 .7rem; color:var(--accent)}
+
+  .player{
+    display:grid; grid-template-columns:96px 1fr; gap:16px; align-items:center;
+  }
+  .cover{
+    width:96px; height:96px; border-radius:12px; background:
+      linear-gradient(135deg,#cfe0ff,#f3f7ff);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    font-weight:700; color:#244a99;
+  }
+  .meta > .title{font-weight:700; font-size:1.05rem}
+  .meta > .desc{color:#1b1f2f; margin:.25rem 0 .2rem; font-weight:600}
+  .meta > .subtle{color:var(--ink-dim); margin:.1rem 0 .6rem}
+  audio{width:100%}
+
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:.8rem}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+    padding:.55rem .9rem; border:1px solid #c9d2ea; background:#f8f9fb;
+    border-radius:10px; color:var(--ink); text-decoration:none; cursor:pointer;
+    transition:all .15s ease;
+  }
+  .btn:hover{background:#eaf0ff; border-color:var(--accent)}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+  .btn.primary:hover{background:#1f56c4}
+
+  .note{color:var(--ink-dim); font-size:.95rem}
+  .list{margin:.6rem 0 0; padding-left:1.1rem}
+
+  footer{border-top:1px solid var(--line); color:#6a738a}
+  .foot{max-width:960px; margin:0 auto; padding:20px}
+
+  @media (max-width:640px){ .player{grid-template-columns:1fr} .cover{width:76px; height:76px} }
+  @media print{ header, .actions, .note a{display:none !important} .card{page-break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">CompTIA Security+ • Lesson 15</div>
+    <h1>Audio Review</h1>
+    <p class="sub">Risk Management Processes — an 8-minute guided review of core concepts.</p>
+    <div class="chips">
+      <div class="chip">Format: M4A</div>
+      <div class="chip">Approx. length: ~8 minutes</div>
+      <div class="chip">Topic: risk lifecycle, BIA, risk responses, KRIs, registers</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="card">
+    <h2>Listen</h2>
+    <div class="player">
+      <div class="cover" aria-hidden="true">L15</div>
+      <div class="meta">
+        <div class="title">Lesson 15 Audio Review — Risk Management Processes</div>
+        <div class="desc">Plays directly in the browser</div>
+        <div class="subtle">Tip: speed 1.25× for efficient review</div>
+        <audio controls preload="metadata">
+          <source src="assets/audio/lesson15_review.m4a" type="audio/mp4">
+          <source src="assets/audio/lesson15_review.m4a" type="audio/x-m4a">
+          Your browser does not support the audio element.
+        </audio>
+        <div class="actions">
+          <a class="btn primary" href="assets/audio/lesson15_review.m4a" download>Download M4A</a>
+          <a class="btn" target="_blank" href="assets/audio/lesson15_review.m4a">Open in new tab</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+  <h2>What this review covers</h2>
+  <p class="note">
+    This audio session breaks down Lesson 15 into a practical story of identifying and managing organizational risk — from initial discovery through analysis, prioritization, and response.
+  </p>
+
+  <ul class="list">
+    <li><b>Risk identification:</b> recognizing vulnerabilities, threats, operational weaknesses, and system dependencies across mission-essential functions.</li>
+
+    <li><b>Risk analysis:</b> explaining the difference between qualitative scoring (high/medium/low) and quantitative metrics like SLE, ARO, and ALE.</li>
+
+    <li><b>Business Impact Analysis (BIA):</b> determining critical processes, Maximum Tolerable Downtime (MTD), Recovery Time Objective (RTO), and Recovery Point Objective (RPO).</li>
+
+    <li><b>Risk responses:</b> walking through avoid, mitigate, transfer, and accept — when each is appropriate and how compensating controls fit in.</li>
+
+    <li><b>Residual vs inherent risk:</b> understanding how controls change exposure and how leadership sets risk appetite and tolerance.</li>
+
+    <li><b>Risk register & KRIs:</b> capturing risks, owners, severity, heat-map classification, and using Key Risk Indicators to detect increases in exposure.</li>
+
+    <li><b>Assessment types:</b> differentiating between ad hoc, one-time, recurring, and continuous assessments.</li>
+
+    <li><b>Enterprise Risk Management (ERM):</b> mapping organizational risk posture to strategic objectives and compliance requirements.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot">© ITM-433</div>
+</footer>
+
+</body>
+</html>
