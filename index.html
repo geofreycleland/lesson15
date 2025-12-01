@@ -271,14 +271,17 @@ select {
     Match threat, vulnerability, control, inherent risk, and residual risk.
   </p>
 
-  <div class="match-grid">
+  <!-- MATCHING GRID FIXED LAYOUT -->
+  <div style="display:grid; grid-template-columns: 1fr auto; gap:16px; align-items:start;">
+
     <div>
       <div class="match-card"><b>Threat:</b> Phishing campaigns targeting finance</div>
       <div class="match-card"><b>Vulnerability:</b> Users lack MFA</div>
       <div class="match-card"><b>Control:</b> Add MFA + anti-phishing training</div>
     </div>
 
-    <div>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+
       <select class="match-select" data-key="inherent">
         <option disabled selected>— inherent risk —</option>
         <option>High (no controls in place)</option>
@@ -292,7 +295,9 @@ select {
         <option>Medium (risk reduced)</option>
         <option>Low (risk minimized)</option>
       </select>
+
     </div>
+
   </div>
 
   <div id="pbq3_result" class="result"></div>
