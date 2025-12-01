@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PBQ Runner — Lesson 15 (Risk Management Processes)</title>
+  <style>
+    :root {
+      --bg: #f4f6fa;
+      --card: #ffffff;
+      --ink: #1b1f2f;
+      --ink-dim: #5c6373;
+      --accent: #2463eb;
+      --ok: #2ba84a;
+      --warn: #e0a106;
+      --err: #e63946;
+      --line: #dfe3eb;
+      --muted-bg: #fafbff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.5 "Segoe UI", Roboto, system-ui, sans-serif;
+    }
+
+    header {
+      padding: 10px 12px;
+      border-bottom: 1px solid #d7dce6;
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      margin: 0.2rem 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0.4rem 0;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid #c2c8d6;
+      background: #f8f9fb;
+      color: var(--ink);
+      padding: 0.4rem 0.7rem;
+      height: 32px;
+      min-width: 104px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      line-height: 1.2;
+      text-align: center;
+      transition: all 0.15s ease-in-out;
+      text-decoration: none;
+    }
+    .btn:hover { background: #eaf0ff; border-color: var(--accent); }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary:hover { background: #1f56c4; }
+
+    .pill {
+      display: inline-block;
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      background: #f0f4ff;
+      border: 1px solid #c8d4fa;
+      color: var(--accent);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      margin: 20px 0;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .title { font-weight: 700; }
+    .muted { color: var(--ink-dim); }
+
+    .scenario-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .scenario-label {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: #e9f9ef;
+      border: 1px solid #c6ebd3;
+      color: #116a3d;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      width: max-content;
+    }
+
+    .scenario {
+      white-space: pre-wrap;
+      color: #2b2f3c;
+    }
+
+    .result { margin-top: 10px; font-weight: 600; }
+    .correct { color: var(--ok); }
+    .incorrect { color: var(--err); }
+
+    .feedback {
+      margin-top: 6px;
+      padding: 0.55rem 0.7rem;
+      border: 1px solid #f1c9cf;
+      background: #fff5f6;
+      color: #7a1e27;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    footer {
+      max-width: 900px;
+      margin: 40px auto 80px;
+      padding: 0 16px;
+      color: #707789;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    select {
+      background: #ffffff;
+      color: var(--ink);
+      border: 1px solid #cbd2e0;
+      padding: 0.35rem 0.5rem;
+      border-radius: 8px;
+      margin: 0 0.35rem;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(36, 99, 235, 0.2);
+    }
+
+    /* Kanban */
+    .lanes { display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; }
+    .lane {
+      min-height: 160px; padding: 10px;
+      border:1px dashed #c9d1e3;
+      border-radius: 12px;
+      background: var(--muted-bg);
+      position:relative;
+    }
+    .lane h4 { margin:.2rem 0 .5rem; color:#2b4aa6; }
+    .ghost { position:relative; padding:.3rem .5rem; font-style:italic; color:#5c6373 }
+    .finding {
+      background:#fff; border:1px solid var(--line); border-radius: 12px;
+      padding:.55rem .65rem; margin:.45rem 0;
+      cursor:grab; box-shadow: 0 4px 10px rgba(0,0,0,.04);
+    }
+    .finding.dragging { opacity:.85; }
+
+    .chips { display:flex; gap:6px; flex-wrap:wrap; margin:.15rem 0 .25rem }
+    .chip { background:#eef2ff; border:1px solid #cdd7ff; color:#1f44b4; padding:.1rem .45rem; border-radius:999px; font-size:.75rem }
+
+    /* Table */
+    table { width:100%; border-collapse:separate; border-spacing:0 }
+    th, td { padding:10px; border-bottom:1px solid var(--line); text-align:left }
+    th { background:#f6f8ff; }
+
+    @media (max-width: 640px) {
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .btn { width: auto; min-width: unset; }
+      .lanes { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="pill">Lesson 15 • Risk Management Processes</div>
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <a class="btn" href="lesson15_practice_questions.html" target="_blank">Practice Questions</a>
+      <a class="btn" href="audio_review.html" target="_blank">Audio Review</a>
+    </div>
+
+    <div class="toolbar-right">
+      <button class="btn" id="btnReset">Reset</button>
+      <button class="btn primary" id="btnCheck">Check Answers</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Scenario -->
+  <section class="card">
+    <div class="title" id="pbq_title">KonaTech — Quarterly Risk & Controls Review</div>
+    <div class="muted" id="lesson">Lesson 15 – Explain Risk Management Processes</div>
+
+    <div class="scenario-wrap">
+      <div class="scenario-label">Scenario</div>
+
+      <p class="scenario" id="scenario">
+KonaTech is conducting its quarterly enterprise risk review as part of its Risk & Control Self-Assessment (RCSA). 
+The risk team has identified new threats, vulnerabilities, and business impacts that affect several mission-essential 
+functions (MEFs). Business Impact Analysis (BIA) metrics such as Maximum Tolerable Downtime (MTD) and system 
+dependencies are being used to evaluate the severity of each risk.
+
+You are given confirmed risks involving:
+• External data exposure caused by misconfiguration (high confidentiality impact). 
+• A mission-essential system vulnerable to a high-likelihood exploit (high integrity + availability impact).
+• Internal workstation vulnerabilities with low inherent impact and limited threat actor capability.
+• Outdated segmented infrastructure with compensating controls.
+• Cryptographic weaknesses on a customer-facing interface.
+
+Leadership priorities (based on risk appetite & tolerance):
+• Protect confidentiality and prevent regulatory breaches.
+• Maintain availability of mission-essential business functions.
+• Apply mitigation where cost-effective; accept only low residual-risk items.
+• Ensure risk treatments are verified (controls evaluated).
+
+Your tasks:
+1) Categorize risks based on inherent risk, likelihood, and impact to MEFs (Fix Now / Fix Next / Schedule).
+2) Choose the appropriate risk treatment (mitigate, transfer, accept, avoid) and verification cadence for each asset.
+      </p>
+    </div>
+  </section>
+
+  <!-- PBQ 1 -->
+  <section class="card" id="pbq1">
+    <div class="scenario-label" style="background:#e9f3ff;border-color:#cfe0ff;color:#1b4cb8">PBQ 1</div>
+    <h2 style="margin:8px 0 2px">Categorize each risk</h2>
+    <p class="muted">
+      Sort each risk into <b>Fix Now</b>, <b>Fix Next</b>, or <b>Schedule</b> based on inherent risk, likelihood, impact, and MEF relevance.
+    </p>
+
+    <div class="lanes">
+      <div class="lane" data-lane="NOW"><h4>Fix Now</h4></div>
+      <div class="lane" data-lane="NEXT"><h4>Fix Next</h4></div>
+      <div class="lane" data-lane="LATER"><h4>Schedule</h4></div>
+    </div>
+
+    <div id="pool" style="margin-top:10px"></div>
+    <div class="result" id="pbq1_result"></div>
+    <div class="feedback" id="pbq1_fb" hidden></div>
+  </section>
+
+  <!-- PBQ 2 -->
+  <section class="card" id="pbq2">
+    <div class="scenario-label" style="background:#e9f3ff;border-color:#cfe0ff;color:#1b4cb8">PBQ 2</div>
+    <h2 style="margin:8px 0 2px">Select the correct risk treatment & verification cadence</h2>
+    <p class="muted">Choose the appropriate <b>risk response</b> (mitigate, transfer, accept, avoid) and how often the controls should be verified.</p>
+
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Asset</th><th>Context</th><th>Treatment</th><th>Cadence</th>
+          </tr>
+        </thead>
+        <tbody id="scan_tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="result" id="pbq2_result"></div>
+    <div class="feedback" id="pbq2_fb" hidden></div>
+  </section>
+
+</main>
+
+<footer>
+  Risk management cycle: identify → analyze → evaluate → treat (mitigate/transfer/accept/avoid) → monitor & review.
+</footer>
+
+<script>
+/* Helpers */
+const $ = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+
+/* ===================== PBQ 1 ===================== */
+const FINDINGS = [
+  { id:'F1',
+    title:'Public cloud storage misconfiguration exposing PII',
+    tags:['Confidentiality','High Impact','Inherent Risk High','KRI'],
+    meta:'High confidentiality impact • Public exposure • Likelihood high',
+    expect:'NOW',
+    why:'Confidentiality breach exceeds risk appetite; requires immediate mitigation.'
+  },
+  { id:'F2',
+    title:'Mission-essential DB vulnerable to high-likelihood exploit',
+    tags:['MEF','Integrity','Availability','High Likelihood'],
+    meta:'Supports MEF • Exploit likely • MTD short',
+    expect:'NOW',
+    why:'Threat + vulnerability + MEF = fix immediately.'
+  },
+  { id:'F3',
+    title:'Internal workstation with moderate vulnerability (low threat capability)',
+    tags:['Internal','Moderate','Low Impact'],
+    meta:'Inherent impact low • No MEF dependency',
+    expect:'NEXT',
+    why:'Residual risk acceptable short term.'
+  },
+  { id:'F4',
+    title:'Customer-facing interface using deprecated cipher (3DES)',
+    tags:['Crypto','Customer-Facing','Medium'],
+    meta:'Medium impact • No active exploitation',
+    expect:'NEXT',
+    why:'Should be mitigated but not immediately.'
+  },
+  { id:'F5',
+    title:'Legacy segmented backup host on EOL OS',
+    tags:['Legacy','Segmented','Compensating Controls'],
+    meta:'Likelihood low due to segmentation • Migration planned',
+    expect:'LATER',
+    why:'Residual risk acceptable until migration.'
+  }
+];
+
+let KANBAN_STATE = { NOW:[], NEXT:[], LATER:[], POOL:[] };
+
+function makeFindingCard(f){
+  const el = document.createElement('div');
+  el.className='finding'; el.draggable=true; el.dataset.id=f.id;
+  el.innerHTML = `
+    <div class="chips">${f.tags.map(t=>`<span class="chip">${t}</span>`).join(' ')}</div>
+    <div style="font-weight:700">${f.title}</div>
+    <div class="meta">${f.meta}</div>`;
+  el.addEventListener('dragstart', e=>{ el.classList.add('dragging'); e.dataTransfer.setData('text/plain', f.id); });
+  el.addEventListener('dragend', ()=> el.classList.remove('dragging'));
+  return el;
+}
+
+function renderKanban(){
+  const lanes = { NOW:$('[data-lane="NOW"]'), NEXT:$('[data-lane="NEXT"]'), LATER:$('[data-lane="LATER"]') };
+
+  Object.values(lanes).forEach(l=> l.querySelectorAll('.finding, .ghost').forEach(el=>el.remove()));
+
+  for(const lane of ['NOW','NEXT','LATER']){
+    KANBAN_STATE[lane].forEach(f => lanes[lane].appendChild(makeFindingCard(f)));
+    if(!KANBAN_STATE[lane].length){
+      const ghost=document.createElement('div'); ghost.className='ghost'; ghost.textContent='Drag here';
+      lanes[lane].appendChild(ghost);
+    }
+  }
+
+  const pool=$('#pool'); pool.innerHTML='';
+  KANBAN_STATE.POOL.forEach(f => pool.appendChild(makeFindingCard(f)));
+}
+
+function setupDnd(){
+  const zones=[$('[data-lane="NOW"]'), $('[data-lane="NEXT"]'), $('[data-lane="LATER"]'), $('#pool')];
+  zones.forEach(zone=>{
+    zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.style.outline='1px dashed #7aa0ff'; });
+    zone.addEventListener('dragleave', ()=> zone.style.outline='none');
+    zone.addEventListener('drop', e=>{
+      e.preventDefault(); zone.style.outline='none';
+      const id=e.dataTransfer.getData('text/plain');
+      moveTo(zone.id ? 'POOL' : zone.dataset.lane, id);
+      renderKanban();
+    });
+  });
+}
+
+function moveTo(target,id){
+  for(const lane of ['NOW','NEXT','LATER','POOL']){
+    const i=KANBAN_STATE[lane].findIndex(x=>x.id===id);
+    if(i>=0){ KANBAN_STATE[lane].splice(i,1); break; }
+  }
+  KANBAN_STATE[target].push(FINDINGS.find(x=>x.id===id));
+}
+
+function initKanban(){
+  KANBAN_STATE={ NOW:[], NEXT:[], LATER:[], POOL:[...FINDINGS].sort(()=>Math.random()-0.5) };
+  renderKanban(); setupDnd();
+}
+
+function gradeKanban(){
+  let correct=0, total=FINDINGS.length; const fb=[];
+  for(const lane of ['NOW','NEXT','LATER']){
+    for(const f of KANBAN_STATE[lane]){
+      if(lane===f.expect) correct++; else fb.push(`• ${f.title}: should be ${f.expect}. ${f.why}`);
+    }
+  }
+
+  $('#pbq1_result').textContent=`${correct}/${total} correct`;
+  $('#pbq1_result').className='result ' + (correct===total ? 'correct':'incorrect');
+
+  const el=$('#pbq1_fb');
+  if(fb.length){ el.hidden=false; el.innerHTML=fb.join('<br>'); }
+  else{ el.hidden=true; el.textContent=''; }
+}
+
+/* ===================== PBQ 2 ===================== */
+const ASSETS = [
+  { name:'KonaTech MEF Database',
+    ctx:'Mission-essential; short MTD; requires strong control validation',
+    expectType:'Mitigate',
+    expectCadence:'Weekly',
+    why:'Requires continuous verification of controls to protect MEF availability/integrity.'
+  },
+  { name:'Customer-Facing Web Portal',
+    ctx:'High availability; confidentiality moderate; KRI monitored',
+    expectType:'Mitigate',
+    expectCadence:'Weekly',
+    why:'External exposure = higher likelihood; weekly check aligns with risk tolerance.'
+  },
+  { name:'Partner Interface Gateway',
+    ctx:'Third-party dependency; contractual SLAs; externally exposed',
+    expectType:'Transfer',
+    expectCadence:'Monthly',
+    why:'Risk partially transferred via contract; monthly SLA verification sufficient.'
+  },
+  { name:'Legacy Segmented Backup Host',
+    ctx:'EOL OS; compensating controls; migration planned',
+    expectType:'Accept',
+    expectCadence:'Bi-weekly',
+    why:'Residual risk within tolerance until migration; periodic checks required.'
+  }
+];
+
+const TYPES=['Mitigate','Transfer','Accept','Avoid'];
+const CAD=['Daily','Weekly','Bi-weekly','Monthly'];
+
+function renderScanMatrix(){
+  const tb=$('#scan_tbody'); tb.innerHTML='';
+  ASSETS.forEach((a,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><b>${a.name}</b></td>
+      <td class="muted">${a.ctx}</td>
+      <td>
+        <select data-i="${i}" data-k="t">
+          <option value="" disabled selected>— select —</option>
+          ${TYPES.map(v=>`<option value="${v}">${v}</option>`).join('')}
+        </select>
+      </td>
+      <td>
+        <select data-i="${i}" data-k="c">
+          <option value="" disabled selected>— select —</option>
+          ${CAD.map(v=>`<option value="${v}">${v}</option>`).join('')}
+        </select>
+      </td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function gradeScanMatrix(){
+  let correct=0, total=ASSETS.length*2; const fb=[];
+  $$('#scan_tbody select').forEach(sel=>{
+    const i=Number(sel.dataset.i), k=sel.dataset.k, row=ASSETS[i], v=sel.value;
+    if(!v) return;
+    if(k==='t'){
+      if(v===row.expectType) correct++; else fb.push(`• ${row.name}: treatment = ${row.expectType}. ${row.why}`);
+    } else {
+      if(v===row.expectCadence) correct++; else fb.push(`• ${row.name}: cadence = ${row.expectCadence}. ${row.why}`);
+    }
+  });
+
+  $('#pbq2_result').textContent=`${correct}/${total} correct`;
+  $('#pbq2_result').className='result ' + (correct===total ? 'correct':'incorrect');
+
+  const el=$('#pbq2_fb');
+  if(fb.length){ el.hidden=false; el.innerHTML=fb.join('<br>'); }
+  else{ el.hidden=true; el.textContent=''; }
+}
+
+/* ===================== Global ===================== */
+
+function checkAll(){
+  gradeKanban();
+  gradeScanMatrix();
+}
+
+function resetAll(){
+  initKanban();
+  renderScanMatrix();
+  ['pbq1_result','pbq2_result'].forEach(id=> $('#'+id).textContent='' );
+  ['pbq1_fb','pbq2_fb'].forEach(id=>{ const n=$('#'+id); n.hidden=true; n.textContent=''; });
+}
+
+window.addEventListener('DOMContentLoaded', ()=>{
+  initKanban();
+  renderScanMatrix();
+  $('#btnCheck').addEventListener('click', checkAll);
+  $('#btnReset').addEventListener('click', resetAll);
+});
+</script>
+
+</body>
+</html>
