@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>PBQ Runner — Lesson 15 (Risk Management Processes)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PBQ Runner — Lesson 15 Risk Management</title>
 
 <style>
-/* ----------------------------------------------------
-   CORE STYLE (SAME AS YOUR TEMPLATE)
----------------------------------------------------- */
+/* -----------------------------------------------------
+   THEME + BASE STYLES
+----------------------------------------------------- */
 :root {
   --bg: #f4f6fa;
   --card: #ffffff;
@@ -16,486 +16,505 @@
   --ink-dim: #5c6373;
   --accent: #2463eb;
   --ok: #2ba84a;
-  --err: #e63946;
+  --err: #d62839;
   --line: #dfe3eb;
   --muted-bg: #fafbff;
 }
-* { box-sizing: border-box; }
+
 body {
-  margin: 0;
   background: var(--bg);
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
   color: var(--ink);
-  font: 16px/1.5 "Segoe UI", Roboto, system-ui, sans-serif;
 }
+
 header {
+  background: white;
   padding: 12px;
-  background: #fff;
-  border-bottom: 1px solid #d7dce6;
+  border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 50;
 }
+
 .pill {
-  display: inline-block;
-  padding: 0.35rem 0.7rem;
-  border-radius: 8px;
+  padding: 6px 12px;
   background: #eaf0ff;
-  border: 1px solid #c8d4fa;
   color: var(--accent);
-  font-weight: 600;
+  font-weight: bold;
+  border-radius: 8px;
+  display: inline-block;
 }
+
 main {
   max-width: 900px;
-  margin: 32px auto;
+  margin: 30px auto;
   padding: 0 16px;
 }
+
 .card {
   background: white;
+  padding: 20px;
   border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 18px;
-  margin: 20px 0;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  border-radius: 14px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.04);
 }
+
 .scenario-label {
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 700;
   background: #e9f9ef;
   border: 1px solid #c6ebd3;
+  padding: 4px 10px;
+  border-radius: 999px;
   color: #116a3d;
-  font-size: 0.85rem;
-  font-weight: 800;
-  width: max-content;
+  margin-bottom: 6px;
+  display: inline-block;
 }
-.chip {
-  background:#eef2ff;
-  border:1px solid #ccd7ff;
-  color:#1f44b4;
-  padding:.1rem .45rem;
-  border-radius:999px;
-  font-size:.75rem;
-}
-.finding {
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:10px;
-  margin:8px 0;
-  cursor:grab;
-  box-shadow:0 3px 8px rgba(0,0,0,.05);
-}
-.finding.dragging { opacity:0.7; }
 
-/* ----------------------------------------------------
-   PBQ1 HEATMAP (4-QUADRANT)
----------------------------------------------------- */
+select {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #cbd2e0;
+}
+
+/* -----------------------------------------------------
+   PBQ 1: HEATMAP GRID
+----------------------------------------------------- */
+
 .heatmap {
-  display:grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 220px);
-  gap:10px;
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  grid-template-rows: repeat(2,200px);
+  gap: 10px;
 }
-.quad {
+
+.hm-cell {
   background: var(--muted-bg);
-  border:2px dashed #c9d1e3;
-  border-radius:14px;
-  padding:10px;
-  position:relative;
+  border: 1px dashed #b8c4dd;
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
 }
-.quad h4 {
-  margin:0 0 6px;
-  color:#1f3a86;
-  font-size:1rem;
-}
-.ghost { opacity:0.4; font-style:italic; }
 
-/* ----------------------------------------------------
-   PBQ2 TABLE
----------------------------------------------------- */
-table { width:100%; border-collapse:separate; border-spacing:0 }
-th, td {
-  padding:10px;
-  border-bottom:1px solid var(--line);
+.hm-cell h4 {
+  margin: 0;
+  font-size: .9rem;
+  color: #1b3f8b;
 }
-th { background:#eef1ff; }
 
-/* ----------------------------------------------------
-   BUTTONS
----------------------------------------------------- */
-.btn {
-  appearance:none;
-  border:1px solid #c2c8d6;
-  background:#f8f9fb;
-  padding:0.4rem 0.7rem;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:0.9rem;
+.risk-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin: 6px 0;
+  cursor: grab;
+  box-shadow: 0 3px 8px rgba(0,0,0,.05);
 }
-.btn.primary {
-  background:var(--accent);
-  color:white;
-  border-color:var(--accent);
-}
-.btn:hover { background:#e1e9ff; }
-.btn.primary:hover { background:#174bbd; }
 
-.result { margin-top:8px; font-weight:700; }
-.correct { color:var(--ok); }
-.incorrect { color:var(--err); }
+.ghost {
+  opacity: .4;
+  font-style: italic;
+  margin-top: 6px;
+}
+
+/* -----------------------------------------------------
+   PBQ 3 MATCHING
+----------------------------------------------------- */
+.match-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.match-card {
+  padding: 10px;
+  border: 1px solid var(--line);
+  background: white;
+  border-radius: 10px;
+}
 
 .feedback {
-  margin-top:8px;
-  padding:10px;
-  border-radius:8px;
-  background:#fff5f5;
-  border:1px solid #f5cccc;
-  color:#7a1e27;
+  margin-top: 8px;
+  background: #fff5f5;
+  color: #a11;
+  border: 1px solid #f3c2c2;
+  padding: 8px;
+  border-radius: 6px;
+  display: none;
+}
+
+.correct { color: var(--ok); }
+.incorrect { color: var(--err); }
+
+.btn {
+  background: #eef2ff;
+  border: 1px solid #c2c8d6;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
 }
 </style>
-
 </head>
+
 <body>
 
 <header>
-  <div class="pill">Lesson 15 • Risk Management Processes</div>
+  <div class="pill">Lesson 15 • Risk Management</div>
 </header>
 
 <main>
 
-<!-- ----------------------------------------------------
+<!-- -----------------------------------------------------
      SCENARIO
----------------------------------------------------- -->
+----------------------------------------------------- -->
 <section class="card">
   <div class="scenario-label">Scenario</div>
   <p>
-You are completing a quarterly Risk Assessment for KonaTech.  
-The goal is to evaluate:
-<br><br>
-• Likelihood  
-• Impact  
-• Inherent vs Residual Risk  
-• Business Impact Analysis (MTD / MEF importance)  
-• Risk Treatment (Mitigate / Transfer / Avoid / Accept)  
-• Monitoring cadence  
+    KonaTech is completing its quarterly Risk & Control Self Assessment (RCSA).  
+    You must evaluate risks using:
+    <br><br>
+    • Likelihood × Impact (Heatmap)<br>
+    • Risk Treatment options (mitigate / transfer / accept / avoid)<br>
+    • Control effectiveness → Inherent vs Residual risk<br><br>
+
+    Complete PBQ 1, PBQ 2, and PBQ 3 below.
   </p>
 </section>
 
-<!-- ----------------------------------------------------
-     PBQ 1: DRAG & DROP 4-QUADRANT HEATMAP
----------------------------------------------------- -->
+<!-- -----------------------------------------------------
+     PBQ 1 — HEATMAP DRAG & DROP
+----------------------------------------------------- -->
 <section class="card" id="pbq1">
-  <div class="scenario-label" style="background:#eaf2ff;color:#1a3db3;">PBQ 1</div>
-  <h2>Place each risk in the correct Heatmap Quadrant</h2>
-  <p class="muted">Quadrants are based on <b>Likelihood</b> vs <b>Impact</b>
-     (Inherent Risk from Lesson 15).</p>
+  <div class="scenario-label" style="background:#e9f3ff;border-color:#cfe0ff;color:#1b4cb8">PBQ 1</div>
+  <h2>Risk Matrix — Drag each risk into the correct quadrant</h2>
+
+  <p class="muted">
+    Based on Lesson 15, categorize risks by <b>likelihood</b> and <b>impact</b>.
+  </p>
 
   <div class="heatmap">
-    <div class="quad" data-quad="HH">
+    <div class="hm-cell" data-cell="HH">
       <h4>High Likelihood / High Impact</h4>
     </div>
-    <div class="quad" data-quad="LH">
-      <h4>Low Likelihood / High Impact</h4>
-    </div>
-    <div class="quad" data-quad="HL">
+
+    <div class="hm-cell" data-cell="HL">
       <h4>High Likelihood / Low Impact</h4>
     </div>
-    <div class="quad" data-quad="LL">
+
+    <div class="hm-cell" data-cell="LH">
+      <h4>Low Likelihood / High Impact</h4>
+    </div>
+
+    <div class="hm-cell" data-cell="LL">
       <h4>Low Likelihood / Low Impact</h4>
     </div>
   </div>
 
-  <div id="risk_pool" style="margin-top:18px;"></div>
-  <div class="result" id="pbq1_result"></div>
-  <div class="feedback" id="pbq1_fb" hidden></div>
+  <div id="pool_pbq1" style="margin-top:20px;"></div>
+
+  <div id="pbq1_result" class="result"></div>
+  <div id="pbq1_fb" class="feedback"></div>
 </section>
 
-<!-- ----------------------------------------------------
-     PBQ 2: RISK TREATMENT MATRIX
----------------------------------------------------- -->
+<!-- -----------------------------------------------------
+     PBQ 2 — RISK TREATMENT TABLE
+----------------------------------------------------- -->
 <section class="card" id="pbq2">
-  <div class="scenario-label" style="background:#eaf2ff;color:#1a3db3;">PBQ 2</div>
-  <h2>Select the correct Risk Treatment & Monitoring Cadence</h2>
+  <div class="scenario-label" style="background:#e9f3ff;border-color:#cfe0ff;color:#1b4cb8">PBQ 2</div>
+  <h2>Select Treatment & Verification Cadence</h2>
 
-  <table>
+  <p class="muted">
+    Choose the correct <b>risk response</b> & <b>monitoring frequency</b>.
+  </p>
+
+  <table style="width:100%; border-collapse:separate; border-spacing:0;">
     <thead>
       <tr>
-        <th>Risk</th>
+        <th>Asset</th>
         <th>Context</th>
         <th>Treatment</th>
         <th>Cadence</th>
       </tr>
     </thead>
-    <tbody id="tbody2"></tbody>
+    <tbody id="pbq2_body"></tbody>
   </table>
 
-  <div class="result" id="pbq2_result"></div>
-  <div class="feedback" id="pbq2_fb" hidden></div>
+  <div id="pbq2_result" class="result"></div>
+  <div id="pbq2_fb" class="feedback"></div>
 </section>
 
-<!-- ----------------------------------------------------
-     BUTTONS
----------------------------------------------------- -->
-<div style="text-align:center; margin:30px 0;">
-  <button class="btn" id="btnReset">Reset</button>
-  <button class="btn primary" id="btnCheck">Check Answers</button>
+<!-- -----------------------------------------------------
+     PBQ 3 — MATCHING (INHERENT VS RESIDUAL RISK)
+----------------------------------------------------- -->
+<section class="card" id="pbq3">
+  <div class="scenario-label" style="background:#e9f3ff;border-color:#cfe0ff;color:#1b4cb8">PBQ 3</div>
+  <h2>Match the Correct Risk Concepts</h2>
+
+  <p class="muted">
+    Match threat, vulnerability, control, inherent risk, and residual risk.
+  </p>
+
+  <div class="match-grid">
+    <div>
+      <div class="match-card"><b>Threat:</b> Phishing campaigns targeting finance</div>
+      <div class="match-card"><b>Vulnerability:</b> Users lack MFA</div>
+      <div class="match-card"><b>Control:</b> Add MFA + anti-phishing training</div>
+    </div>
+
+    <div>
+      <select class="match-select" data-key="inherent">
+        <option disabled selected>— inherent risk —</option>
+        <option>High (no controls in place)</option>
+        <option>Medium (controls partially effective)</option>
+        <option>Low (controls strong)</option>
+      </select>
+
+      <select class="match-select" data-key="residual">
+        <option disabled selected>— residual risk —</option>
+        <option>High (risk unchanged)</option>
+        <option>Medium (risk reduced)</option>
+        <option>Low (risk minimized)</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="pbq3_result" class="result"></div>
+  <div id="pbq3_fb" class="feedback"></div>
+</section>
+
+<!-- -----------------------------------------------------
+     GLOBAL BUTTONS
+----------------------------------------------------- -->
+<div style="text-align:center; margin:40px 0;">
+  <button class="btn primary" onclick="gradeAll()">Check All</button>
+  <button class="btn" onclick="resetAll()">Reset</button>
 </div>
 
 </main>
 
-<!-- ----------------------------------------------------
-     SCRIPT
----------------------------------------------------- -->
 <script>
-const $ = (s, el=document)=>el.querySelector(s);
-const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
+/* -----------------------------------------------------
+   PBQ 1 — Heatmap Drag/Drop
+----------------------------------------------------- */
 
-/* ---------------------------------------------
-   PBQ1 — HEATMAP RISKS
---------------------------------------------- */
-const RISKS = [
-  {
-    id:"R1",
-    title:"Cloud bucket exposing PII",
-    tags:["Confidentiality","Regulatory","MTD Critical"],
-    expect:"HH",
-    why:"Direct PII exposure → high impact; publicly accessible → high likelihood."
-  },
-  {
-    id:"R2",
-    title:"MEF database running outdated cryptography",
-    tags:["MEF","Integrity","High Impact"],
-    expect:"LH",
-    why:"High impact to MEF, but exploit likelihood is still low."
-  },
-  {
-    id:"R3",
-    title:"Workstation missing patches (no sensitive data)",
-    tags:["Low Impact","Internal"],
-    expect:"HL",
-    why:"Impact is low but likelihood is moderate/high."
-  },
-  {
-    id:"R4",
-    title:"Legacy segmented server not internet-facing",
-    tags:["Legacy","Compensating Controls"],
-    expect:"LL",
-    why:"Segmentation lowers likelihood and business impact is low."
-  }
+const PBQ1_RISKS = [
+  { id:"r1", text:"Public-facing database w/ exposed PII", expect:"HH" },
+  { id:"r2", text:"Weak passwords on internal HR system", expect:"HL" },
+  { id:"r3", text:"Critical MEF dependency with rare outage risk", expect:"LH" },
+  { id:"r4", text:"Legacy printer server not externally reachable", expect:"LL" }
 ];
 
-let heatmapState = {
-  HH:[], LH:[], HL:[], LL:[], POOL:[...RISKS]
-};
-
-/* Render cards */
-function makeCard(r){
-  const d=document.createElement("div");
-  d.className="finding";
-  d.draggable=true;
-  d.dataset.id=r.id;
-  d.innerHTML=`
-    <div>${r.tags.map(t=>`<span class="chip">${t}</span>`).join(" ")}</div>
-    <strong>${r.title}</strong>
-  `;
-  d.addEventListener("dragstart",e=>{
-    d.classList.add("dragging");
-    e.dataTransfer.setData("text/plain", r.id);
-  });
-  d.addEventListener("dragend",()=> d.classList.remove("dragging"));
-  return d;
-}
-
 function renderPBQ1(){
-  /* clear quadrants */
-  $$(".quad").forEach(q=> q.querySelectorAll(".finding, .ghost").forEach(e=>e.remove()));
+  const pool = document.getElementById("pool_pbq1");
+  pool.innerHTML = "";
+  PBQ1_RISKS.forEach(r=>{
+    const div = document.createElement("div");
+    div.className = "risk-card";
+    div.draggable = true;
+    div.dataset.id = r.id;
+    div.innerText = r.text;
 
-  /* render per quadrant */
-  for(const q of ["HH","LH","HL","LL"]){
-    const target = document.querySelector(`[data-quad="${q}"]`);
-    heatmapState[q].forEach(r=> target.appendChild(makeCard(r)));
-    if(heatmapState[q].length===0){
-      const ghost=document.createElement("div");
-      ghost.textContent="Drag here";
-      ghost.className="ghost";
-      target.appendChild(ghost);
-    }
-  }
-
-  /* render pool */
-  const pool=$("#risk_pool");
-  pool.innerHTML="";
-  heatmapState.POOL.forEach(r=> pool.appendChild(makeCard(r)));
-}
-
-function moveRisk(target,id){
-  for(const q of ["HH","LH","HL","LL","POOL"]){
-    const i=heatmapState[q].findIndex(x=>x.id===id);
-    if(i>=0){ heatmapState[q].splice(i,1); break; }
-  }
-  heatmapState[target].push(RISKS.find(r=>r.id===id));
-}
-
-function setupDND(){
-  const zones=[...$$(".quad"), $("#risk_pool")];
-  zones.forEach(z=>{
-    z.addEventListener("dragover", e=>{
-      e.preventDefault();
-      z.style.outline="2px dashed #6c8bff";
+    div.addEventListener("dragstart", e=>{
+      e.dataTransfer.setData("text/plain", r.id);
     });
-    z.addEventListener("dragleave",()=> z.style.outline="none");
-    z.addEventListener("drop", e=>{
-      e.preventDefault();
-      z.style.outline="none";
-      const id=e.dataTransfer.getData("text/plain");
-      const quad=z.dataset.quad ?? "POOL";
-      moveRisk(quad,id);
-      renderPBQ1();
+
+    pool.appendChild(div);
+  });
+
+  document.querySelectorAll(".hm-cell").forEach(cell=>{
+    cell.addEventListener("dragover", e=> e.preventDefault());
+    cell.addEventListener("drop", e=>{
+      const id = e.dataTransfer.getData("text/plain");
+      const card = document.querySelector(`[data-id='${id}']`);
+      cell.appendChild(card);
     });
   });
 }
 
 function gradePBQ1(){
-  let correct=0;
-  let fb=[];
-  for(const q of ["HH","LH","HL","LL"]){
-    for(const r of heatmapState[q]){
-      if(r.expect===q) correct++;
-      else fb.push(`• ${r.title}: should be in ${r.expect}. ${r.why}`);
-    }
-  }
-  $("#pbq1_result").textContent=`${correct}/4 correct`;
-  $("#pbq1_result").className="result " + (correct===4 ? "correct" : "incorrect");
+  let correct = 0;
+  let fb = [];
 
-  const box=$("#pbq1_fb");
+  PBQ1_RISKS.forEach(r=>{
+    const cell = document.querySelector(`.hm-cell[data-cell='${r.expect}']`);
+    const cardInCell = cell.querySelector(`[data-id='${r.id}']`);
+
+    if(cardInCell) correct++;
+    else fb.push(`• ${r.text} should be in ${r.expect}`);
+  });
+
+  document.getElementById("pbq1_result").innerHTML =
+    `${correct}/${PBQ1_RISKS.length} correct`;
+
+  const f = document.getElementById("pbq1_fb");
   if(fb.length){
-    box.hidden=false;
-    box.innerHTML=fb.join("<br>");
+    f.style.display="block";
+    f.innerHTML = fb.join("<br>");
   } else {
-    box.hidden=true;
-    box.innerHTML="";
+    f.style.display="none";
   }
 }
 
-/* ---------------------------------------------
-   PBQ2 — RISK TREATMENT TABLE
---------------------------------------------- */
-const PBQ2 = [
+/* -----------------------------------------------------
+   PBQ 2 — Treatment Table
+----------------------------------------------------- */
+
+const PBQ2_ITEMS = [
   {
-    risk:"PII Exposure",
-    ctx:"Confidentiality breach; high regulatory impact",
+    name:"Finance Database",
+    ctx:"High confidentiality • MEF system",
     expectT:"Mitigate",
-    expectC:"Weekly",
-    why:"Immediate remediation + continuous verification."
+    expectC:"Weekly"
   },
   {
-    risk:"MEF Database Weak Crypto",
-    ctx:"High impact to critical function, but low likelihood",
-    expectT:"Mitigate",
-    expectC:"Bi-weekly",
-    why:"Mitigation required, cadence slightly relaxed."
-  },
-  {
-    risk:"Third-Party API Risk",
-    ctx:"Shared responsibility with contractual controls",
-    expectT:"Transfer",
-    expectC:"Monthly",
-    why:"Responsibility transferred via SLA."
-  },
-  {
-    risk:"Legacy Segmented Host",
-    ctx:"Residual risk within tolerance",
+    name:"Public Marketing Website",
+    ctx:"Low confidentiality • Informational only",
     expectT:"Accept",
-    expectC:"Monthly",
-    why:"Low impact + compensating controls."
+    expectC:"Monthly"
+  },
+  {
+    name:"3rd-Party Payroll Portal",
+    ctx:"Contractual SLA • Shared responsibility",
+    expectT:"Transfer",
+    expectC:"Monthly"
+  },
+  {
+    name:"Legacy Backup Appliance",
+    ctx:"Compensating controls • Being replaced",
+    expectT:"Accept",
+    expectC:"Bi-Weekly"
   }
 ];
 
-const treatments=["Mitigate","Transfer","Accept","Avoid"];
-const cadences=["Daily","Weekly","Bi-weekly","Monthly"];
-
 function renderPBQ2(){
-  const tbody=$("#tbody2");
-  tbody.innerHTML="";
-  PBQ2.forEach((r,i)=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td><b>${r.risk}</b></td>
-      <td class="muted">${r.ctx}</td>
+  const tbody = document.getElementById("pbq2_body");
+  tbody.innerHTML = "";
+
+  PBQ2_ITEMS.forEach((item,i)=>{
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td><b>${item.name}</b></td>
+      <td>${item.ctx}</td>
       <td>
-        <select data-i="${i}" data-k="t">
-          <option value="" disabled selected>— select —</option>
-          ${treatments.map(t=>`<option>${t}</option>`).join("")}
+        <select data-row="${i}" data-type="T">
+          <option disabled selected>— choose —</option>
+          <option>Mitigate</option>
+          <option>Transfer</option>
+          <option>Accept</option>
+          <option>Avoid</option>
         </select>
       </td>
       <td>
-        <select data-i="${i}" data-k="c">
-          <option value="" disabled selected>— select —</option>
-          ${cadences.map(c=>`<option>${c}</option>`).join("")}
+        <select data-row="${i}" data-type="C">
+          <option disabled selected>— choose —</option>
+          <option>Daily</option>
+          <option>Weekly</option>
+          <option>Bi-Weekly</option>
+          <option>Monthly</option>
         </select>
       </td>
     `;
+
     tbody.appendChild(tr);
   });
 }
 
 function gradePBQ2(){
-  let correct=0;
-  const total=PBQ2.length*2;
-  let fb=[];
+  let correct = 0;
+  let fb = [];
 
-  $$("#tbody2 select").forEach(sel=>{
-    const row=PBQ2[sel.dataset.i];
-    const v=sel.value;
-    if(!v) return;
+  document.querySelectorAll("#pbq2_body select").forEach(sel=>{
+    const row = sel.dataset.row;
+    const type = sel.dataset.type;
+    const val = sel.value;
 
-    if(sel.dataset.k==="t"){
-      if(v===row.expectT) correct++;
-      else fb.push(`• ${row.risk}: Treatment should be ${row.expectT}. ${row.why}`);
+    if(!val) return;
+
+    const exp = type === "T"
+      ? PBQ2_ITEMS[row].expectT
+      : PBQ2_ITEMS[row].expectC;
+
+    if(val === exp){
+      correct++;
     } else {
-      if(v===row.expectC) correct++;
-      else fb.push(`• ${row.risk}: Cadence should be ${row.expectC}. ${row.why}`);
+      fb.push(`• ${PBQ2_ITEMS[row].name}: should be ${exp}`);
     }
   });
 
-  $("#pbq2_result").textContent=`${correct}/${total} correct`;
-  $("#pbq2_result").className="result " + (correct===total ? "correct":"incorrect");
+  document.getElementById("pbq2_result").innerHTML =
+    `${correct}/${PBQ2_ITEMS.length*2} correct`;
 
-  const box=$("#pbq2_fb");
+  const f = document.getElementById("pbq2_fb");
   if(fb.length){
-    box.hidden=false;
-    box.innerHTML=fb.join("<br>");
+    f.style.display="block";
+    f.innerHTML = fb.join("<br>");
   } else {
-    box.hidden=true;
-    box.textContent="";
+    f.style.display="none";
   }
 }
 
-/* ---------------------------------------------
-   Global
---------------------------------------------- */
-function resetAll(){
-  heatmapState={HH:[],LH:[],HL:[],LL:[],POOL:[...RISKS]};
-  renderPBQ1();
-  renderPBQ2();
-  $("#pbq1_result").textContent="";
-  $("#pbq2_result").textContent="";
-  $("#pbq1_fb").hidden=true;
-  $("#pbq2_fb").hidden=true;
+/* -----------------------------------------------------
+   PBQ 3 — Matching
+----------------------------------------------------- */
+
+function gradePBQ3(){
+  const selInherent = document.querySelector("[data-key='inherent']").value;
+  const selResidual = document.querySelector("[data-key='residual']").value;
+
+  let correct = 0;
+  let fb = [];
+
+  if(selInherent === "High (no controls in place)") correct++;
+  else fb.push("• Inherent risk should be HIGH");
+
+  if(selResidual === "Medium (risk reduced)") correct++;
+  else fb.push("• Residual risk should be MEDIUM");
+
+  document.getElementById("pbq3_result").innerHTML = `${correct}/2 correct`;
+
+  const f = document.getElementById("pbq3_fb");
+  if(fb.length){
+    f.style.display="block";
+    f.innerHTML = fb.join("<br>");
+  } else f.style.display="none";
 }
 
-function checkAll(){
+/* -----------------------------------------------------
+   GLOBAL
+----------------------------------------------------- */
+
+function gradeAll(){
   gradePBQ1();
   gradePBQ2();
+  gradePBQ3();
 }
 
-/* init */
-window.addEventListener("DOMContentLoaded",()=>{
+function resetAll(){
   renderPBQ1();
   renderPBQ2();
-  setupDND();
-  $("#btnCheck").addEventListener("click", checkAll);
-  $("#btnReset").addEventListener("click", resetAll);
-});
+  document.getElementById("pbq1_result").innerHTML="";
+  document.getElementById("pbq1_fb").style.display="none";
+  document.getElementById("pbq2_result").innerHTML="";
+  document.getElementById("pbq2_fb").style.display="none";
+  document.getElementById("pbq3_result").innerHTML="";
+  document.getElementById("pbq3_fb").style.display="none";
+}
+
+/* INIT */
+renderPBQ1();
+renderPBQ2();
+
 </script>
 
 </body>
