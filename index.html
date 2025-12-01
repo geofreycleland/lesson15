@@ -149,19 +149,41 @@ select {
 .correct { color: var(--ok); }
 .incorrect { color: var(--err); }
 
-.btn {
-  background: #eef2ff;
-  border: 1px solid #c2c8d6;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
+/* UNIVERSAL BUTTON STYLE FOR BOTH <button> AND <a> */
+.btn,
+.btn:link,
+.btn:visited {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.45rem;
+
+  padding:.55rem 1.1rem;
+  border:1px solid #c9d2ea;
+  background:#ffffff;
+  border-radius:10px;
+
+  color:#1b1f2f;
+  text-decoration:none;   /* <-- removes underline */
+  font-weight:600;
+  cursor:pointer;
+
+  transition:all .15s ease;
+}
+
+.btn:hover {
+  background:#eef3ff;
+  border-color:#2463eb;
 }
 
 .btn.primary {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
+  background:#2463eb;
+  border-color:#2463eb;
+  color:#ffffff;
+}
+
+.btn.primary:hover {
+  background:#1f56c4;
 }
 </style>
 </head>
@@ -174,7 +196,7 @@ select {
 
   <div style="display:flex; gap:10px;">
     <a class="btn" href="lesson15_practice_questions.html" target="_blank">Practice Questions</a>
-    <a class="btn" href="lesson15_practice_questions.html" target="_blank">Audio Review</a>
+    <a class="btn" href="audio_review.html" target="_blank">Audio Review</a>
     <button class="btn" onclick="resetAll()">Reset</button>
     <button class="btn primary" onclick="gradeAll()">Check Answers</button>
   </div>
