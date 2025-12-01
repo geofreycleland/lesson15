@@ -273,30 +273,49 @@ select {
     Match threat, vulnerability, control, inherent risk, and residual risk.
   </p>
 
-  <!-- MATCHING GRID FIXED LAYOUT -->
-  <div style="display:grid; grid-template-columns: 1fr auto; gap:16px; align-items:start;">
+  <div style="display:grid; grid-template-columns: 1fr 260px; gap:24px;">
 
-    <div>
+    <!-- LEFT SIDE — INFO CARDS -->
+    <div style="display:flex; flex-direction:column; gap:12px;">
       <div class="match-card"><b>Threat:</b> Phishing campaigns targeting finance</div>
       <div class="match-card"><b>Vulnerability:</b> Users lack MFA</div>
       <div class="match-card"><b>Control:</b> Add MFA + anti-phishing training</div>
     </div>
 
-    <div style="display:flex; flex-direction:column; gap:12px;">
+    <!-- RIGHT SIDE — CLEAR DROPDOWN PANEL -->
+    <div style="
+        background:#f8faff;
+        border:1px solid var(--line);
+        border-radius:12px;
+        padding:16px;
+        display:flex;
+        flex-direction:column;
+        gap:16px;
+      ">
+      
+      <div>
+        <label style="font-weight:600; color:var(--ink-dim); font-size:.9rem;">
+          Select Inherent Risk
+        </label>
+        <select class="match-select" data-key="inherent" style="margin-top:6px; width:100%;">
+          <option disabled selected>— choose inherent risk —</option>
+          <option>High (no controls in place)</option>
+          <option>Medium (controls partially effective)</option>
+          <option>Low (controls strong)</option>
+        </select>
+      </div>
 
-      <select class="match-select" data-key="inherent">
-        <option disabled selected>— inherent risk —</option>
-        <option>High (no controls in place)</option>
-        <option>Medium (controls partially effective)</option>
-        <option>Low (controls strong)</option>
-      </select>
-
-      <select class="match-select" data-key="residual">
-        <option disabled selected>— residual risk —</option>
-        <option>High (risk unchanged)</option>
-        <option>Medium (risk reduced)</option>
-        <option>Low (risk minimized)</option>
-      </select>
+      <div>
+        <label style="font-weight:600; color:var(--ink-dim); font-size:.9rem;">
+          Select Residual Risk
+        </label>
+        <select class="match-select" data-key="residual" style="margin-top:6px; width:100%;">
+          <option disabled selected>— choose residual risk —</option>
+          <option>High (risk unchanged)</option>
+          <option>Medium (risk reduced)</option>
+          <option>Low (risk minimized)</option>
+        </select>
+      </div>
 
     </div>
 
